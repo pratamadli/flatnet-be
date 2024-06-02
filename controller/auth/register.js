@@ -1,4 +1,5 @@
-const { User } = require("../../models");
+const { buildSuccResp, buildErrResp } = require("../../middleware/utils");
+const { User, Pelanggan } = require("../../models");
 const bcrypt = require("bcryptjs");
 
 /**
@@ -8,16 +9,34 @@ const bcrypt = require("bcryptjs");
  */
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, nik, nama, no_telp, alamat } = req.body;
   const roleId = 3; // Role ID for 'pelanggan'
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: hashedPassword, roleId });
-    console.log("USER REGISTER", user);
-    res.status(201).json(user);
+    const dataValue = user?.dataValues;
+    try {
+      const userId = dataValue?.id;
+
+      const bodyPelanggan = {
+        nik,
+        nama,
+        no_telp,
+        alamat,
+        userId,
+      };
+
+      const pelanggan = await Pelanggan.create(bodyPelanggan);
+      console.log("PELANGGAN", pelanggan);
+      res.status(200).json(buildSuccResp(pelanggan, "SUCCESS"));
+    } catch (error) {
+      console.log("ERROR PELANGGAN", error);
+      res.status(400).json(buildErrResp(null, error.message));
+    }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.log("ERROR USER", error);
+    res.status(400).json(buildErrResp(null, error.message));
   }
 };
 
