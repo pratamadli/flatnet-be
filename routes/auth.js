@@ -5,12 +5,14 @@ const {
   register,
   logout,
   isAuthenticated,
+  getAuth
 } = require("../controller/auth");
 const authMiddleware = require("../middleware/auth");
 
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", authMiddleware, logout);
+router.get("/user", authMiddleware, getAuth);
 router.use("/protected", authMiddleware, isAuthenticated, (req, res) => {
   res.json({ message: "This is a protected route" });
 });

@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Pelanggan',
-    tableName: 'pelanggan'
+    tableName: 'pelanggan' // Ensure this matches the migration
   });
   return Pelanggan;
 };

@@ -4,14 +4,11 @@
  * @param {Object} res - response object
  */
 
+const { buildSuccResp, buildErrResp } = require("../../middleware/utils");
+
 const logout = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ error: "Failed to logout" });
-    }
-    res.clearCookie("connect.sid");
-    res.json({ message: "Logged out successfully" });
-  });
+  // Invalidate the token on the client side
+  res.json(buildSuccResp(null, "Logged out successfully"));
 };
 
 module.exports = { logout };

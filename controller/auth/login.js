@@ -1,7 +1,7 @@
-const { User } = require('../../models');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
+const { User, Pelanggan } = require("../../models");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { buildSuccResp, buildErrResp } = require("../../middleware/utils");
 
 /**
  * Login function called by route
@@ -10,23 +10,30 @@ const jwt = require('jsonwebtoken');
  */
 
 const login = async (req, res) => {
-  const { email, password, apiKey } = req.body;
-
-  if (apiKey !== process.env.API_KEY) {
-    return res.status(401).json({ error: 'Invalid API key' });
-  }
+  const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user || !await bcrypt.compare(password, user.password)) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ userId: user.id, roleId: user.roleId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { userId: user.id, roleId: user.roleId },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    const message = "Logged in successfully";
 
-    res.json({ message: 'Logged in successfully', token, user });
+    const objToken = { token };
+
+    const data = Object.assign(user.dataValues, objToken);
+
+    console.log("DATA", data);
+
+    res.json(buildSuccResp(data, message));
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json(buildErrResp(null, error?.message));
   }
 };
 

@@ -28,7 +28,6 @@ const register = async (req, res) => {
       };
 
       const pelanggan = await Pelanggan.create(bodyPelanggan);
-      console.log("PELANGGAN", pelanggan);
       res.status(200).json(buildSuccResp(pelanggan, "SUCCESS"));
     } catch (error) {
       console.log("ERROR PELANGGAN", error);
