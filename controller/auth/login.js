@@ -29,9 +29,7 @@ const login = async (req, res) => {
 
     const data = Object.assign(user.dataValues, objToken);
 
-    console.log("DATA", data);
-
-    res.json(buildSuccResp(data, message));
+    res.status(200).json(buildSuccResp(data, message));
   } catch (error) {
     res.status(400).json(buildErrResp(null, error?.message));
   }

@@ -9,7 +9,7 @@ const createUser = async (req, res) => {
   try {
     const user = await createUserInDb(userId, body);
 
-    res.status(201).json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).json(buildErrResp(null, error.message));
   }
