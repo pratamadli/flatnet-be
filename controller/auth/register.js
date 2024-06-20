@@ -9,22 +9,28 @@ const bcrypt = require("bcryptjs");
  */
 
 const register = async (req, res) => {
-  const { email, password, nik, nama, no_telp, alamat } = req.body;
+  const { email, password, nik, nama, noTelp, alamat } = req.body;
   const roleId = 3; // Role ID for 'pelanggan'
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hashedPassword, roleId });
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      roleId,
+      nik,
+      nama,
+      noTelp,
+      alamat,
+    });
     const dataValue = user?.dataValues;
     try {
-      const userId = dataValue?.id;
+      const userId = dataValue?.userId;
 
       const bodyPelanggan = {
-        nik,
-        nama,
-        no_telp,
-        alamat,
         userId,
+        createdUserId: userId,
+        updatedUserId: userId,
       };
 
       const pelanggan = await Pelanggan.create(bodyPelanggan);

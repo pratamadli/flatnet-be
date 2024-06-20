@@ -9,14 +9,29 @@ module.exports = (sequelize, DataTypes) => {
       });
       Petugas.hasMany(models.Layanan, {
         foreignKey: 'petugasId',
-        as: 'layanans'
+        as: 'layanan'
       });
     }
   }
   Petugas.init({
-    nama: DataTypes.STRING,
-    no_telp: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    petugasId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    createdUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    updatedUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Petugas',

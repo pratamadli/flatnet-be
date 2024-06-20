@@ -8,12 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         as: 'pelanggan'
       });
       Layanan.belongsTo(models.PaketLayanan, {
-        foreignKey: 'paketId',
+        foreignKey: 'paketLayananId',
         as: 'paketLayanan'
-      });
-      Layanan.belongsTo(models.Jadwal, {
-        foreignKey: 'jadwalId',
-        as: 'jadwal'
       });
       Layanan.belongsTo(models.Petugas, {
         foreignKey: 'petugasId',
@@ -22,13 +18,49 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Layanan.init({
-    pelangganId: DataTypes.INTEGER,
-    paketId: DataTypes.INTEGER,
-    jadwalId: DataTypes.INTEGER,
-    petugasId: DataTypes.INTEGER,
-    status: DataTypes.STRING,
-    alasan_tolak: DataTypes.STRING,
-    file_bukti: DataTypes.STRING
+    layananId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    pelangganId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    paketLayananId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    petugasId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.ENUM,
+      values: ['menunggu verifikasi', 'diverifikasi', 'ditolak', 'terpasang', 'selesai'],
+      allowNull: false
+    },
+    alasanTolak: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    fileBukti: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    waktuPemasangan: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    createdUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    updatedUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Layanan',

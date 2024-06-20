@@ -6,26 +6,27 @@ const { getAuthInDb } = require("../../auth/helpers");
 const getUsersInDb = (userId, id = null) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let authData = await getAuthInDb(userId);
-      authData = authData.data;
+      // let authData = await getAuthInDb(userId);
+      // authData = authData.data;
 
-      const authRoleId = authData.roleId;
+      // const authRoleId = authData.roleId;
 
-      if (authRoleId !== 1) {
-        return reject(
-          buildErrResp(
-            null,
-            "User don't have any authorization to access this feature"
-          )
-        );
-      }
+      // if (authRoleId !== 1) {
+      //   return reject(
+      //     buildErrResp(
+      //       null,
+      //       "User don't have any authorization to access this feature"
+      //     )
+      //   );
+      // }
 
       let data = [];
       data = await User.findAll();
 
       if (id !== null) {
-       
-        data = data.filter((x) => x.id == id);
+        data = data.filter((x) => x.userId == id);
+
+        data = data[0] || {};
       }
 
       resolve(buildSuccResp(data, "Success Get User"));

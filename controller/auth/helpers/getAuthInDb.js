@@ -1,9 +1,10 @@
 const { buildErrResp, buildSuccResp } = require("../../../middleware/utils");
-const { User, Pelanggan, Petugas } = require("../../../models");
+const { User, Pelanggan, Petugas, Role } = require("../../../models");
 
 const getAuthInDb = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log("USER_ID", userId);
       const user = await User.findByPk(userId, {
         attributes: { exclude: ["password"] },
       });
@@ -16,6 +17,15 @@ const getAuthInDb = (userId) => {
 
       let data = { ...user?.dataValues };
 
+      const role = await Role.findByPk(roleId);
+
+      const roleName = role.roleName;
+
+      data = {
+        ...data,
+        roleName,
+      };
+
       if (roleId === 3) {
         let pelanggan = await Pelanggan.findOne({ where: { userId } });
 
@@ -23,11 +33,7 @@ const getAuthInDb = (userId) => {
           pelanggan = pelanggan?.dataValues;
           data = {
             ...data,
-            nik: pelanggan?.nik,
-            nama: pelanggan?.nama,
-            no_telp: pelanggan?.no_telp,
-            alamat: pelanggan?.alamat,
-            pelanggan_id: pelanggan?.id,
+            pelangganId: pelanggan?.pelangganId,
           };
         } else {
           return reject(buildErrResp(null, "Pelanggan not found"));
@@ -39,9 +45,7 @@ const getAuthInDb = (userId) => {
           petugas = petugas?.dataValues;
           data = {
             ...data,
-            nama: petugas?.nama,
-            no_telp: petugas?.no_telp,
-            petugas_id: petugas?.id,
+            petugasId: petugas?.petugasId,
           };
         } else {
           return reject(buildErrResp(null, "Petugas not found"));

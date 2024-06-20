@@ -9,20 +9,33 @@ module.exports = (sequelize, DataTypes) => {
       });
       Pelanggan.hasMany(models.Layanan, {
         foreignKey: 'pelangganId',
-        as: 'layanans'
+        as: 'layanan'
       });
     }
   }
   Pelanggan.init({
-    nik: DataTypes.STRING,
-    nama: DataTypes.STRING,
-    no_telp: DataTypes.STRING,
-    alamat: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    pelangganId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    createdUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    updatedUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Pelanggan',
-    tableName: 'pelanggan' // Ensure this matches the migration
+    tableName: 'pelanggan'
   });
   return Pelanggan;
 };

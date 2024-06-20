@@ -5,9 +5,9 @@ const { updateUserInDb } = require("./helpers");
 
 const updateUser = async (req, res) => {
   const body = req.body;
-  const userId = req.user.userId;
+  const authId = req.user.userId;
   try {
-    const user = await updateUserInDb(userId, body);
+    const user = await updateUserInDb(authId, body);
 
     res.status(200).json(user);
   } catch (error) {

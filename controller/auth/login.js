@@ -1,4 +1,4 @@
-const { User, Pelanggan } = require("../../models");
+const { User, Role } = require("../../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { buildSuccResp, buildErrResp } = require("../../middleware/utils");
@@ -19,7 +19,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id, roleId: user.roleId },
+      { userId: user.userId, roleId: user.roleId },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -27,7 +27,15 @@ const login = async (req, res) => {
 
     const objToken = { token };
 
-    const data = Object.assign(user.dataValues, objToken);
+    let data = Object.assign(user.dataValues, objToken);
+
+    const roleId = data.roleId;
+
+    const role = await Role.findByPk(roleId);
+
+    const roleName = role.roleName;
+
+    data = { ...data, roleName };
 
     res.status(200).json(buildSuccResp(data, message));
   } catch (error) {

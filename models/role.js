@@ -5,16 +5,33 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Role.hasMany(models.User, {
         foreignKey: 'roleId',
-        as: 'users'
+        as: 'user'
       });
     }
   }
   Role.init({
-    role: DataTypes.STRING
+    roleId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    roleName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    createdUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    updatedUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Role',
-    tableName: 'roles'
+    tableName: 'role'
   });
   return Role;
 };

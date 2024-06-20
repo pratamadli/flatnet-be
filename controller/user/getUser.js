@@ -5,7 +5,6 @@ const getUser = async (req, res) => {
   try {
     const id = req.params.id;
     const userId = req.user.userId;
-    console.log({ id, userId });
     const users = await getUsersInDb(userId, id);
     res.status(200).json(users);
   } catch (error) {
