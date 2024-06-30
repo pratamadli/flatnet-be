@@ -5,12 +5,16 @@ const {
   register,
   logout,
   isAuthenticated,
-  getAuth
+  getAuth,
 } = require("../controller/auth");
 const authMiddleware = require("../middleware/auth");
+const {
+  registerValidation,
+  loginValidation,
+} = require("../controller/auth/validation");
 
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", registerValidation, register);
+router.post("/login", loginValidation, login);
 router.post("/logout", authMiddleware, logout);
 router.get("/user", authMiddleware, getAuth);
 router.use("/protected", authMiddleware, isAuthenticated, (req, res) => {
