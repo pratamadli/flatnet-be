@@ -1,7 +1,8 @@
 const { buildErrResp, buildSuccResp } = require("../../../middleware/utils");
-const { User } = require("../../../models");
+const { User, Role } = require("../../../models");
 
 const { getAuthInDb } = require("../../auth/helpers");
+const { getRolesInDb } = require("../../role/helpers/getRolesInDb");
 
 const getUsersInDb = (userId, id = null) => {
   return new Promise(async (resolve, reject) => {
@@ -21,7 +22,15 @@ const getUsersInDb = (userId, id = null) => {
       // }
 
       let data = [];
-      data = await User.findAll();
+      const usersData = await User.findAll();
+
+      for (let i = 0; i < usersData.length; i++) {
+        let detailData = usersData[i].dataValues;
+        let roleData = await getRolesInDb(detailData.roleId);
+        const roleName = roleData.data.dataValues.roleName;
+        detailData.roleName = roleName;
+        data.push(detailData);
+      }
 
       if (id !== null) {
         data = data.filter((x) => x.userId == id);

@@ -11,14 +11,6 @@ const getLayananInDb = ({
     try {
       let data = [];
 
-      console.log({
-        layananId,
-        petugasId,
-        pelangganId,
-        paketLayananId,
-        status,
-      });
-
       data = await Layanan.findAll();
 
       console.log("data layanan", data);
