@@ -1,5 +1,19 @@
 const { buildErrResp, buildSuccResp } = require("../../../middleware/utils");
-const { Layanan } = require("../../../models");
+const moment = require("moment");
+const parseString = (input) => {
+  return input
+    .split("_") // Split the string into an array of words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+    .join(" ");
+};
+
+const {
+  Layanan,
+  Pelanggan,
+  Petugas,
+  PaketLayanan,
+  User,
+} = require("../../../models");
 const getLayananInDb = ({
   layananId = null,
   petugasId = null,
@@ -35,7 +49,75 @@ const getLayananInDb = ({
         data = data.filter((x) => x.status == status);
       }
 
-      resolve(buildSuccResp(data, "Success Get Layanan"));
+      const responseData = [];
+
+      for (let i = 0; i < data.length; i++) {
+        let newObj = {};
+        let namaPelanggan = "";
+        let namaPetugas = "";
+        let namaPaket = "";
+        let hargaPaket = 0;
+        let deskripsiPaket = "";
+        let namaStatus = "";
+        let alamatPelanggan = "";
+
+        const pelangganId = data[i].pelangganId;
+        const petugasId = data[i].petugasId;
+        const paketLayananId = data[i].paketLayananId;
+        const status = data[i].status;
+        const waktuPemasangan = moment(data[i].waktuPemasangan)
+          .format("DD-MM-YYYY HH:mm")
+          .toString();
+
+        if (pelangganId) {
+          const pelanggan = await Pelanggan.findOne({
+            where: { pelangganId: pelangganId },
+          });
+          const user = await User.findOne({
+            where: { userId: pelanggan.dataValues.userId },
+          });
+          namaPelanggan = user.dataValues.nama;
+          alamatPelanggan = user.dataValues.alamat;
+        }
+
+        if (petugasId) {
+          const petugas = await Petugas.findOne({
+            where: { petugasId: petugasId },
+          });
+          const user = await User.findOne({
+            where: { userId: petugas.dataValues.userId },
+          });
+          namaPetugas = user.dataValues.nama;
+        }
+
+        if (paketLayananId) {
+          const paketLayanan = await PaketLayanan.findOne({
+            where: { paketLayananId: paketLayananId },
+          });
+          namaPaket = paketLayanan.dataValues.namaPaket;
+          hargaPaket = paketLayanan.dataValues.hargaPaket;
+          deskripsiPaket = paketLayanan.dataValues.deskripsiPaket;
+        }
+        if (status) {
+          namaStatus = await parseString(status);
+        }
+
+        newObj = {
+          ...data[i].dataValues,
+          namaPelanggan,
+          alamatPelanggan,
+          namaPetugas,
+          namaPaket,
+          hargaPaket,
+          deskripsiPaket,
+          namaStatus,
+          waktuPemasangan,
+        };
+
+        responseData.push(newObj);
+      }
+
+      resolve(buildSuccResp(responseData, "Success Get Layanan"));
     } catch (error) {
       return reject(buildErrResp(null, error.message));
     }

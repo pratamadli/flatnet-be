@@ -2,8 +2,6 @@ const { buildErrResp, buildSuccResp } = require("../../../middleware/utils");
 const { User, Pelanggan, Petugas } = require("../../../models");
 const bcrypt = require("bcryptjs");
 const { getAuthInDb } = require("../../auth/helpers");
-const { getPetugasInDb } = require("./getPetugasInDb");
-const { getPelangganInDb } = require("./getPelangganInDb");
 
 const updateUserInDb = (
   authId,

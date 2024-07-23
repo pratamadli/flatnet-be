@@ -29,9 +29,7 @@ const deleteUserInDb = (userId, id = null) => {
       if (value.roleId === 2) {
         const petugas = await Petugas.findOne({ where: { userId: id } });
         if (petugas) {
-          console.log("PETUGAS", petugas);
           const petugasId = petugas.dataValues.petugasId;
-          console.log("PETUGAS ID", petugasId);
           const layanan = await Layanan.findAll({
             where: { petugasId: petugasId },
           });
@@ -45,9 +43,7 @@ const deleteUserInDb = (userId, id = null) => {
       } else if (value.roleId === 3) {
         const pelanggan = await Pelanggan.findOne({ where: { userId: id } });
         if (pelanggan) {
-          console.log("PELANGGAN", pelanggan);
           const pelangganId = pelanggan.dataValues.pelangganId;
-          console.log("PELANGGAN ID", pelangganId);
           const layanan = await Layanan.findAll({
             where: { pelangganId: pelangganId },
           });
