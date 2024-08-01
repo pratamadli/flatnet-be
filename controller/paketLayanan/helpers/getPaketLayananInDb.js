@@ -7,6 +7,8 @@ const getPaketLayananInDb = (paketLayananId = null) => {
 
       data = await PaketLayanan.findAll();
 
+      data = data.sort((a, b) => a.hargaPaket - b.hargaPaket);
+
       if (paketLayananId !== null) {
         data = data.filter((x) => x.paketLayananId == paketLayananId);
 

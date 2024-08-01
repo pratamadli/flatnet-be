@@ -20,14 +20,13 @@ const getLayananInDb = ({
   pelangganId = null,
   paketLayananId = null,
   status = null,
+  withoutStatus = null,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
       let data = [];
 
       data = await Layanan.findAll();
-
-      console.log("data layanan", data);
 
       if (layananId !== null) {
         data = data.filter((x) => x.layananId == layananId);
@@ -49,6 +48,10 @@ const getLayananInDb = ({
         data = data.filter((x) => x.status == status);
       }
 
+      if (withoutStatus !== null) {
+        data = data.filter((x) => x.status !== withoutStatus);
+      }
+
       const responseData = [];
 
       for (let i = 0; i < data.length; i++) {
@@ -58,6 +61,7 @@ const getLayananInDb = ({
         let namaPaket = "";
         let hargaPaket = 0;
         let deskripsiPaket = "";
+        let imagePaket = "";
         let namaStatus = "";
         let alamatPelanggan = "";
 
@@ -97,6 +101,7 @@ const getLayananInDb = ({
           namaPaket = paketLayanan.dataValues.namaPaket;
           hargaPaket = paketLayanan.dataValues.hargaPaket;
           deskripsiPaket = paketLayanan.dataValues.deskripsiPaket;
+          imagePaket = paketLayanan.dataValues.imagePaket;
         }
         if (status) {
           namaStatus = await parseString(status);
@@ -110,6 +115,7 @@ const getLayananInDb = ({
           namaPaket,
           hargaPaket,
           deskripsiPaket,
+          imagePaket,
           namaStatus,
           waktuPemasangan,
         };

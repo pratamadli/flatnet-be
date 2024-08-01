@@ -6,7 +6,7 @@ const {
 } = require("../controller/paketLayanan");
 const authMiddleware = require("../middleware/auth");
 
-router.get("/", authMiddleware, getPaketLayananAll);
+router.get("/", getPaketLayananAll);
 router.get("/:id", authMiddleware, getPaketLayanan);
 
 module.exports = router;
