@@ -123,6 +123,8 @@ const getLayananInDb = ({
         responseData.push(newObj);
       }
 
+      responseData.sort((a, b) => b.layananId - a.layananId);
+
       resolve(buildSuccResp(responseData, "Success Get Layanan"));
     } catch (error) {
       return reject(buildErrResp(null, error.message));
